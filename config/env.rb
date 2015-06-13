@@ -8,14 +8,20 @@ require "cuba"
 require "cuba/safe"
 require "active_record"
 require "active_model"
-require_relative "./../app/hello_world"
+require "pry"
+
+Dir["./app/models/*.rb"].each do |path|
+  require path
+end
+
+require_relative "./../app/web"
 
 
 ActiveRecord::Base.logger = Logger.new(STDERR)
 
 ActiveRecord::Base.establish_connection(
     adapter: "sqlite3",
-    database: "./db/foobar.db"
+    database: "./db/development.db"
 )
 
 unless ActiveRecord::Base.connection.table_exists?(:users)
@@ -23,7 +29,6 @@ unless ActiveRecord::Base.connection.table_exists?(:users)
     create_table :users do |table|
       table.column :first, :string
       table.column :last, :string
-      table.column :org_id, :integer
     end
   end
 end
